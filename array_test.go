@@ -20,6 +20,7 @@ func TestRange(t *testing.T) {
 		{
 			"no error", args{0, 3}, []int{0, 1, 2}, false,
 		},
+		{"start must be less than end", args{3, 2}, nil, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -2,6 +2,8 @@
   "scripts": {
     "test": "go test ./...",
     "coverage": "go test ./... -coverprofile=coverage",
+    "coverage:html": "runScripts.ps1 -CommandName coverage && go tool cover -html=coverage",
+    "coverage:watch": "watchexec.exe --restart --clear  --exts=go  --shell=pwsh 'runScripts.ps1 -CommandName coverage:html'",
     "goproxy": "go env -w GOPROXY=https://goproxy.cn,direct",
     "doc:dev": "watchexec.exe --restart --clear  --exts go  'pkgsite -http localhost:13760'"
   }

@@ -46,3 +46,14 @@ type Ordered interface {
 type Number interface {
 	Integer | Float
 }
+
+// Entry defines a key/value pairs.
+type Entry[K comparable, V any] struct {
+	Key   K
+	Value V
+}
+
+func Empty[T any]() T {
+	var zero T
+	return zero
+}

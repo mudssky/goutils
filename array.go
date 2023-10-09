@@ -22,10 +22,8 @@ func RangeWithStep[T Number](start, end, step T) (res []T, err error) {
 	}
 
 	// 暂时不处理可能的溢出问题。
-	size := int((end - start) / step)
-	if size < 0 {
-		size = -size
-	} else if size == 0 {
+	size := Abs(int((end - start) / step))
+	if size == 0 {
 		size = 1
 	}
 
