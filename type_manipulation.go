@@ -44,6 +44,7 @@ func FromPtrOr[T any](x *T, fallback T) T {
 }
 
 // ToSlicePtr returns a slice of pointer copy of value.
+// 传入列表，返回指针的切片
 func ToSlicePtr[T any](collection []T) []*T {
 	return Map(collection, func(x T, _ int) *T {
 		return &x
@@ -51,6 +52,7 @@ func ToSlicePtr[T any](collection []T) []*T {
 }
 
 // ToAnySlice returns a slice with all elements mapped to `any` type
+// 传入一个切片，返回一个any类型的切片
 func ToAnySlice[T any](collection []T) []any {
 	result := make([]any, len(collection))
 	for i, item := range collection {
@@ -61,6 +63,7 @@ func ToAnySlice[T any](collection []T) []any {
 
 // FromAnySlice returns an `any` slice with all elements mapped to a type.
 // Returns false in case of type conversion failure.
+// 从any切片转为有类型的切片
 func FromAnySlice[T any](in []any) (out []T, ok bool) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -77,26 +80,14 @@ func FromAnySlice[T any](in []any) (out []T, ok bool) {
 }
 
 // IsEmpty returns true if argument is a zero value.
+// 判断是否为零值
 func IsEmpty[T comparable](v T) bool {
 	var zero T
 	return zero == v
 }
 
 // IsNotEmpty returns true if argument is not a zero value.
+// 判断是否不是零值
 func IsNotEmpty[T comparable](v T) bool {
-	var zero T
-	return zero != v
-}
-
-// Coalesce returns the first non-empty arguments. Arguments must be comparable.
-func Coalesce[T comparable](v ...T) (result T, ok bool) {
-	for _, e := range v {
-		if e != result {
-			result = e
-			ok = true
-			return
-		}
-	}
-
-	return
+	return !IsEmpty[T](v)
 }

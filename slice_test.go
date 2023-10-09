@@ -608,24 +608,25 @@ func TestSlice(t *testing.T) {
 
 	in := []int{0, 1, 2, 3, 4}
 
-	out1 := Slice(in, 0, 0)
-	out2 := Slice(in, 0, 1)
-	out3 := Slice(in, 0, 5)
-	out4 := Slice(in, 0, 6)
-	out5 := Slice(in, 1, 1)
-	out6 := Slice(in, 1, 5)
-	out7 := Slice(in, 1, 6)
-	out8 := Slice(in, 4, 5)
-	out9 := Slice(in, 5, 5)
-	out10 := Slice(in, 6, 5)
-	out11 := Slice(in, 6, 6)
-	out12 := Slice(in, 1, 0)
-	out13 := Slice(in, 5, 0)
-	out14 := Slice(in, 6, 4)
-	out15 := Slice(in, 6, 7)
-	out16 := Slice(in, -10, 1)
-	out17 := Slice(in, -1, 3)
-	out18 := Slice(in, -10, 7)
+	out1 := SliceSafe(in, 0, 0)
+	out2 := SliceSafe(in, 0, 1)
+	out3 := SliceSafe(in, 0, 5)
+	out4 := SliceSafe(in, 0, 6)
+	out5 := SliceSafe(in, 1, 1)
+	out6 := SliceSafe(in, 1, 5)
+	out7 := SliceSafe(in, 1, 6)
+	out8 := SliceSafe(in, 4, 5)
+	out9 := SliceSafe(in, 5, 5)
+	out10 := SliceSafe(in, 6, 5)
+	out11 := SliceSafe(in, 6, 6)
+	out12 := SliceSafe(in, 1, 0)
+	out13 := SliceSafe(in, 5, 0)
+	out14 := SliceSafe(in, 6, 4)
+	out15 := SliceSafe(in, 6, 7)
+	out16 := SliceSafe(in, -10, 1)
+	out17 := SliceSafe(in, -1, 3)
+	out18 := SliceSafe(in, -10, 7)
+	out19 := SliceSafe(in, -10, -7)
 
 	is.Equal([]int{}, out1)
 	is.Equal([]int{0}, out2)
@@ -645,6 +646,7 @@ func TestSlice(t *testing.T) {
 	is.Equal([]int{0}, out16)
 	is.Equal([]int{0, 1, 2}, out17)
 	is.Equal([]int{0, 1, 2, 3, 4}, out18)
+	is.Equal([]int{0, 1, 2, 3, 4}, out19)
 }
 
 func TestReplace(t *testing.T) {
@@ -758,4 +760,75 @@ func TestIsSortedByKey(t *testing.T) {
 		ret, _ := strconv.Atoi(s)
 		return ret
 	}))
+}
+
+func TestRange(t *testing.T) {
+	// 因为目前我没有很好的办法测试泛型，所以暂时只测试int类型
+	type args struct {
+		start int
+		end   int
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantRes []int
+		wantErr bool
+	}{
+		{
+			"no error", args{0, 3}, []int{0, 1, 2}, false,
+		},
+		{"start must be less than end", args{3, 2}, nil, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotRes, err := Range(tt.args.start, tt.args.end)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Range() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(gotRes, tt.wantRes) {
+				t.Errorf("Range() = %v, want %v", gotRes, tt.wantRes)
+			}
+		})
+	}
+}
+
+func TestRangeWithStep(t *testing.T) {
+	type args struct {
+		start int
+		end   int
+		step  int
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantRes []int
+		wantErr bool
+	}{
+		{
+			"no error", args{0, 3, 1}, []int{0, 1, 2}, false,
+		}, {
+			"step cannot be zero", args{0, 3, 0}, nil, true,
+		},
+
+		{
+			"step direction is inconsistent with start and end values", args{0, 3, -1}, nil, true,
+		},
+		{
+			"size equal 0", args{0, 0, 1}, []int{}, false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotRes, err := RangeWithStep(tt.args.start, tt.args.end, tt.args.step)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("RangeWithStep() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			assert.Equal(t, gotRes, tt.wantRes)
+			// if !reflect.DeepEqual(gotRes, tt.wantRes) {
+			// 	t.Errorf("RangeWithStep() = %v, want %v", gotRes, tt.wantRes)
+			// }
+		})
+	}
 }

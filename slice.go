@@ -1,9 +1,10 @@
 package goutils
 
 import (
+	"errors"
 	"math/rand"
 
-	. "github.com/mudssky/goutils/constraints"
+	c "github.com/mudssky/goutils/constraints"
 )
 
 // Chunk returns an array of elements split into groups the length of size. If array can't be split evenly,
@@ -182,7 +183,7 @@ func Reverse[T any](collection []T) []T {
 	return collection
 }
 
-// Count counts the number of elements in the collection that compare equal to value.
+// Count counts the c.Number of elements in the collection that compare equal to value.
 func Count[T comparable](collection []T, value T) (count int) {
 	for _, item := range collection {
 		if item == value {
@@ -193,7 +194,7 @@ func Count[T comparable](collection []T, value T) (count int) {
 	return count
 }
 
-// CountBy counts the number of elements in the collection for which predicate is true.
+// CountBy counts the c.Number of elements in the collection for which predicate is true.
 func CountBy[T any](collection []T, predicate func(item T) bool) (count int) {
 	for _, item := range collection {
 		if predicate(item) {
@@ -204,7 +205,7 @@ func CountBy[T any](collection []T, predicate func(item T) bool) (count int) {
 	return count
 }
 
-// CountValues counts the number of each element in the collection.
+// CountValues counts the c.Number of each element in the collection.
 func CountValues[T comparable](collection []T) map[T]int {
 	result := make(map[T]int)
 
@@ -215,7 +216,7 @@ func CountValues[T comparable](collection []T) map[T]int {
 	return result
 }
 
-// CountValuesBy counts the number of each element return from mapper function.
+// CountValuesBy counts the c.Number of each element return from mapper function.
 // Is equivalent to chaining lo.Map and lo.CountValues.
 func CountValuesBy[T any, U comparable](collection []T, mapper func(item T) U) map[U]int {
 	result := make(map[U]int)
@@ -281,7 +282,7 @@ func PartitionBy[T any, K comparable](collection []T, iteratee func(item T) K) [
 
 	return result
 
-	// unordered:
+	// unc.Ordered:
 	// groups := GroupBy[T, K](collection, iteratee)
 	// return Values[K, []T](groups)
 }
@@ -442,8 +443,9 @@ func Subset[T any](collection []T, offset int, length uint) []T {
 	return collection[offset : offset+int(length)]
 }
 
-// Slice returns a copy of a slice from `start` up to, but not including `end`. Like `slice[start:end]`, but does not panic on overflow.
-func Slice[T any](collection []T, start int, end int) []T {
+// SliceSafe returns a copy of a slice from `start` up to, but not including `end`. Like `slice[start:end]`, but does not panic on overflow.
+// 类似于slice[start:end]，但是不会因为超出范围panic
+func SliceSafe[T any](collection []T, start int, end int) []T {
 	size := len(collection)
 
 	if start >= end {
@@ -488,7 +490,7 @@ func ReplaceAll[T comparable](collection []T, old T, new T) []T {
 }
 
 // IsSorted checks if a slice is sorted.
-func IsSorted[T Ordered](collection []T) bool {
+func IsSorted[T c.Ordered](collection []T) bool {
 	for i := 1; i < len(collection); i++ {
 		if collection[i-1] > collection[i] {
 			return false
@@ -499,7 +501,7 @@ func IsSorted[T Ordered](collection []T) bool {
 }
 
 // IsSortedByKey checks if a slice is sorted by iteratee.
-func IsSortedByKey[T any, K Ordered](collection []T, iteratee func(item T) K) bool {
+func IsSortedByKey[T any, K c.Ordered](collection []T, iteratee func(item T) K) bool {
 	size := len(collection)
 
 	for i := 0; i < size-1; i++ {
@@ -509,4 +511,38 @@ func IsSortedByKey[T any, K Ordered](collection []T, iteratee func(item T) K) bo
 	}
 
 	return true
+}
+
+// Range 返回[start,end)区间的切片
+func Range[T c.Number](start, end T) (res []T, err error) {
+	if start > end {
+		return nil, errors.New("start must be less than end")
+	}
+	return RangeWithStep(start, end, 1)
+}
+
+// RangeWithStep 返回[start,end，step)区间的切片，step可以为负
+func RangeWithStep[T c.Number](start, end, step T) (res []T, err error) {
+	empty := Empty[[]T]()
+	if step == 0 {
+		return empty, errors.New("step cannot be zero")
+	}
+
+	if (start < end && step < 0) || (start > end && step > 0) {
+		return empty, errors.New("step direction is inconsistent with start and end values")
+	}
+
+	distance := Abs(end - start)
+	// 暂时不处理可能的溢出问题。
+	size := Abs(int((distance) / step))
+
+	res = make([]T, size)
+	if size > 0 {
+		res[0] = start
+	}
+
+	for i := 1; i < size; i++ {
+		res[i] = res[i-1] + step
+	}
+	return
 }
