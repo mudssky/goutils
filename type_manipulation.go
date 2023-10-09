@@ -9,6 +9,7 @@ func Empty[T any]() T {
 }
 
 // ToPtr returns a pointer copy of value.
+//
 // 返回指针
 func ToPtr[T any](x T) *T {
 	return &x
