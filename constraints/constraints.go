@@ -1,4 +1,4 @@
-package goutils
+package constraints
 
 // Signed is a constraint that permits any signed integer type.
 // If future releases of Go add new predeclared signed integer types,
@@ -51,9 +51,4 @@ type Number interface {
 type Entry[K comparable, V any] struct {
 	Key   K
 	Value V
-}
-
-func Empty[T any]() T {
-	var zero T
-	return zero
 }

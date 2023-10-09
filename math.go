@@ -1,5 +1,9 @@
 package goutils
 
+import (
+	. "github.com/mudssky/goutils/constraints"
+)
+
 // 泛型，绝对值
 func Abs[T Number](num T) (res T) {
 	if num < 0 {

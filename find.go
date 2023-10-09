@@ -3,6 +3,8 @@ package goutils
 import (
 	"fmt"
 	"math/rand"
+
+	. "github.com/mudssky/goutils/constraints"
 )
 
 // IndexOf returns the index at which the first occurrence of a value is found in an array or return -1

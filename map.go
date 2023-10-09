@@ -1,7 +1,10 @@
 package goutils
 
+import (
+	. "github.com/mudssky/goutils/constraints"
+)
+
 // FromEntries transforms an array of key/value pairs into a map.
-//
 func FromEntries[K comparable, V any](entries []Entry[K, V]) map[K]V {
 	out := make(map[K]V, len(entries))
 
@@ -13,20 +16,17 @@ func FromEntries[K comparable, V any](entries []Entry[K, V]) map[K]V {
 
 // FromPairs transforms an array of key/value pairs into a map.
 // Alias of FromEntries().
-//
 func FromPairs[K comparable, V any](entries []Entry[K, V]) map[K]V {
 	return FromEntries(entries)
 }
 
 // ToPairs transforms a map into array of key/value pairs.
 // Alias of Entries().
-//
 func ToPairs[K comparable, V any](in map[K]V) []Entry[K, V] {
 	return Entries(in)
 }
 
 // Entries transforms a map into array of key/value pairs.
-//
 func Entries[K comparable, V any](in map[K]V) []Entry[K, V] {
 	entries := make([]Entry[K, V], 0, len(in))
 
@@ -41,7 +41,6 @@ func Entries[K comparable, V any](in map[K]V) []Entry[K, V] {
 }
 
 // Keys creates an array of the map keys.
-//
 func Keys[K comparable, V any](in map[K]V) []K {
 	result := make([]K, 0, len(in))
 
@@ -53,7 +52,6 @@ func Keys[K comparable, V any](in map[K]V) []K {
 }
 
 // Values creates an array of the map values.
-//
 func Values[K comparable, V any](in map[K]V) []V {
 	result := make([]V, 0, len(in))
 
@@ -65,7 +63,6 @@ func Values[K comparable, V any](in map[K]V) []V {
 }
 
 // PickBy returns same map type filtered by given predicate.
-//
 func PickBy[K comparable, V any](in map[K]V, predicate func(key K, value V) bool) map[K]V {
 	r := map[K]V{}
 	for k, v := range in {
@@ -77,7 +74,6 @@ func PickBy[K comparable, V any](in map[K]V, predicate func(key K, value V) bool
 }
 
 // PickByKeys returns same map type filtered by given keys.
-//
 func PickByKeys[K comparable, V any](in map[K]V, keys []K) map[K]V {
 	r := map[K]V{}
 	for k, v := range in {
@@ -89,7 +85,6 @@ func PickByKeys[K comparable, V any](in map[K]V, keys []K) map[K]V {
 }
 
 // PickByValues returns same map type filtered by given values.
-//
 func PickByValues[K comparable, V comparable](in map[K]V, values []V) map[K]V {
 	r := map[K]V{}
 	for k, v := range in {
@@ -101,7 +96,6 @@ func PickByValues[K comparable, V comparable](in map[K]V, values []V) map[K]V {
 }
 
 // OmitBy returns same map type filtered by given predicate.
-//
 func OmitBy[K comparable, V any](in map[K]V, predicate func(key K, value V) bool) map[K]V {
 	r := map[K]V{}
 	for k, v := range in {
@@ -113,7 +107,6 @@ func OmitBy[K comparable, V any](in map[K]V, predicate func(key K, value V) bool
 }
 
 // OmitByKeys returns same map type filtered by given keys.
-//
 func OmitByKeys[K comparable, V any](in map[K]V, keys []K) map[K]V {
 	r := map[K]V{}
 	for k, v := range in {
@@ -125,7 +118,6 @@ func OmitByKeys[K comparable, V any](in map[K]V, keys []K) map[K]V {
 }
 
 // OmitByValues returns same map type filtered by given values.
-//
 func OmitByValues[K comparable, V comparable](in map[K]V, values []V) map[K]V {
 	r := map[K]V{}
 	for k, v := range in {
@@ -147,7 +139,6 @@ func ValueOr[K comparable, V any](in map[K]V, key K, fallback V) V {
 // Invert creates a map composed of the inverted keys and values. If map
 // contains duplicate values, subsequent values overwrite property assignments
 // of previous values.
-//
 func Invert[K comparable, V comparable](in map[K]V) map[V]K {
 	out := make(map[V]K, len(in))
 
@@ -159,7 +150,6 @@ func Invert[K comparable, V comparable](in map[K]V) map[V]K {
 }
 
 // Assign merges multiple maps from left to right.
-//
 func Assign[K comparable, V any](maps ...map[K]V) map[K]V {
 	out := map[K]V{}
 
@@ -173,7 +163,6 @@ func Assign[K comparable, V any](maps ...map[K]V) map[K]V {
 }
 
 // MapKeys manipulates a map keys and transforms it to a map of another type.
-//
 func MapKeys[K comparable, V any, R comparable](in map[K]V, iteratee func(value V, key K) R) map[R]V {
 	result := make(map[R]V, len(in))
 
@@ -185,7 +174,6 @@ func MapKeys[K comparable, V any, R comparable](in map[K]V, iteratee func(value 
 }
 
 // MapValues manipulates a map values and transforms it to a map of another type.
-//
 func MapValues[K comparable, V any, R any](in map[K]V, iteratee func(value V, key K) R) map[K]R {
 	result := make(map[K]R, len(in))
 
@@ -197,7 +185,6 @@ func MapValues[K comparable, V any, R any](in map[K]V, iteratee func(value V, ke
 }
 
 // MapEntries manipulates a map entries and transforms it to a map of another type.
-//
 func MapEntries[K1 comparable, V1 any, K2 comparable, V2 any](in map[K1]V1, iteratee func(key K1, value V1) (K2, V2)) map[K2]V2 {
 	result := make(map[K2]V2, len(in))
 
@@ -210,7 +197,6 @@ func MapEntries[K1 comparable, V1 any, K2 comparable, V2 any](in map[K1]V1, iter
 }
 
 // MapToSlice transforms a map into a slice based on specific iteratee
-//
 func MapToSlice[K comparable, V any, R any](in map[K]V, iteratee func(key K, value V) R) []R {
 	result := make([]R, 0, len(in))
 

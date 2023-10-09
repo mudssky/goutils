@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"testing"
 
+	. "github.com/mudssky/goutils/constraints"
+	// . "github.com/mudssky/goutils/structs"
 	"github.com/stretchr/testify/assert"
 )
 

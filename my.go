@@ -1,5 +1,9 @@
 package goutils
 
+import (
+	. "github.com/mudssky/goutils/constraints"
+)
+
 // 返回一个拼接好的新数组
 func Concat[T any](collection []T, values ...T) []T {
 	result := make([]T, 0, len(collection)+len(values))
