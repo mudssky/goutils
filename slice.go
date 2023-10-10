@@ -9,6 +9,10 @@ import (
 
 // Chunk returns an array of elements split into groups the length of size. If array can't be split evenly,
 // the final chunk will be the remaining elements.
+//
+// 对切片按照大小拆分
+// Chunk([]int{0, 1, 2, 3, 4, 5}, 2)
+// [][]int{{0, 1}, {2, 3}, {4, 5}}
 func Chunk[T any](collection []T, size int) [][]T {
 	if size <= 0 {
 		panic("Second parameter must be greater than 0")
@@ -33,6 +37,8 @@ func Chunk[T any](collection []T, size int) [][]T {
 }
 
 // Compact returns a slice of all non-zero elements.
+//
+// 返回所有非零值元素的集合
 func Compact[T comparable](collection []T) []T {
 	var zero T
 

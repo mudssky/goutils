@@ -25,6 +25,7 @@ func NullableToPtr[T any](x T) *T {
 }
 
 // FromPtr returns the pointer value or empty.
+//
 // 从指针获取值，空指针nil返回对应的零值
 func FromPtr[T any](x *T) T {
 	if x == nil {
@@ -35,6 +36,7 @@ func FromPtr[T any](x *T) T {
 }
 
 // FromPtrOr returns the pointer value or the fallback value.
+//
 // 从指针获取值，为nil返回fallback
 func FromPtrOr[T any](x *T, fallback T) T {
 	if x == nil {
@@ -45,6 +47,7 @@ func FromPtrOr[T any](x *T, fallback T) T {
 }
 
 // ToSlicePtr returns a slice of pointer copy of value.
+//
 // 传入列表，返回指针的切片
 func ToSlicePtr[T any](collection []T) []*T {
 	return Map(collection, func(x T, _ int) *T {
@@ -53,6 +56,7 @@ func ToSlicePtr[T any](collection []T) []*T {
 }
 
 // ToAnySlice returns a slice with all elements mapped to `any` type
+//
 // 传入一个切片，返回一个any类型的切片
 func ToAnySlice[T any](collection []T) []any {
 	result := make([]any, len(collection))
@@ -64,6 +68,7 @@ func ToAnySlice[T any](collection []T) []any {
 
 // FromAnySlice returns an `any` slice with all elements mapped to a type.
 // Returns false in case of type conversion failure.
+//
 // 从any切片转为有类型的切片
 func FromAnySlice[T any](in []any) (out []T, ok bool) {
 	defer func() {
@@ -81,6 +86,7 @@ func FromAnySlice[T any](in []any) (out []T, ok bool) {
 }
 
 // IsEmpty returns true if argument is a zero value.
+//
 // 判断是否为零值
 func IsEmpty[T comparable](v T) bool {
 	var zero T
@@ -88,7 +94,8 @@ func IsEmpty[T comparable](v T) bool {
 }
 
 // IsNotEmpty returns true if argument is not a zero value.
-// 判断是否不是零值
+//
+// 判断是否非零值
 func IsNotEmpty[T comparable](v T) bool {
 	return !IsEmpty[T](v)
 }
