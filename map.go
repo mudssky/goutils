@@ -1,11 +1,11 @@
 package goutils
 
 import (
-	. "github.com/mudssky/goutils/constraints"
+	c "github.com/mudssky/goutils/constraints"
 )
 
 // FromEntries transforms an array of key/value pairs into a map.
-func FromEntries[K comparable, V any](entries []Entry[K, V]) map[K]V {
+func FromEntries[K comparable, V any](entries []c.Entry[K, V]) map[K]V {
 	out := make(map[K]V, len(entries))
 
 	for _, v := range entries {
@@ -16,22 +16,22 @@ func FromEntries[K comparable, V any](entries []Entry[K, V]) map[K]V {
 
 // FromPairs transforms an array of key/value pairs into a map.
 // Alias of FromEntries().
-func FromPairs[K comparable, V any](entries []Entry[K, V]) map[K]V {
+func FromPairs[K comparable, V any](entries []c.Entry[K, V]) map[K]V {
 	return FromEntries(entries)
 }
 
 // ToPairs transforms a map into array of key/value pairs.
 // Alias of Entries().
-func ToPairs[K comparable, V any](in map[K]V) []Entry[K, V] {
+func ToPairs[K comparable, V any](in map[K]V) []c.Entry[K, V] {
 	return Entries(in)
 }
 
 // Entries transforms a map into array of key/value pairs.
-func Entries[K comparable, V any](in map[K]V) []Entry[K, V] {
-	entries := make([]Entry[K, V], 0, len(in))
+func Entries[K comparable, V any](in map[K]V) []c.Entry[K, V] {
+	entries := make([]c.Entry[K, V], 0, len(in))
 
 	for k, v := range in {
-		entries = append(entries, Entry[K, V]{
+		entries = append(entries, c.Entry[K, V]{
 			Key:   k,
 			Value: v,
 		})
@@ -150,6 +150,8 @@ func Invert[K comparable, V comparable](in map[K]V) map[V]K {
 }
 
 // Assign merges multiple maps from left to right.
+//
+// 从左到右合并多个map
 func Assign[K comparable, V any](maps ...map[K]V) map[K]V {
 	out := map[K]V{}
 

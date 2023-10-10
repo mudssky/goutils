@@ -18,6 +18,33 @@ func Intersect[T comparable](list1 []T, list2 []T) []T {
 	return result
 }
 
+// IntersectN 求任意多个数组的交集数组(n>=1),注意传入的数组都需要经过去重
+func IntersectN[T comparable](first []T, arrays ...[]T) []T {
+	length := len(arrays) + 1
+
+	// 创建一个 map，用于统计元素在几个数组中出现过
+	m := make(map[T]int)
+
+	for _, v := range first {
+		m[v]++
+	}
+	for _, a := range arrays {
+		for _, v := range a {
+			m[v]++
+		}
+	}
+
+	res := []T{}
+	// 遍历 map，找出出现在所有数组中的元素
+	for k, v := range m {
+		if v == length {
+			res = append(res, k)
+		}
+	}
+
+	return res
+}
+
 // Union returns all distinct elements from given collections.
 // result returns will not change the order of elements relatively.
 func Union[T comparable](lists ...[]T) []T {
@@ -86,8 +113,8 @@ func Contains[T comparable](collection []T, element T) bool {
 	return false
 }
 
-// contains的别名
-func Include[T comparable](collection []T, element T) bool {
+// Includes Contains的别名
+func Includes[T comparable](collection []T, element T) bool {
 	return Contains(collection, element)
 }
 

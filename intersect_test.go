@@ -1,6 +1,7 @@
 package goutils
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -16,7 +17,16 @@ func TestContains(t *testing.T) {
 	is.Equal(result1, true)
 	is.Equal(result2, false)
 }
+func TestIncludes(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
 
+	result1 := Includes([]int{0, 1, 2, 3, 4, 5}, 5)
+	result2 := Includes([]int{0, 1, 2, 3, 4, 5}, 6)
+
+	is.Equal(result1, true)
+	is.Equal(result2, false)
+}
 func TestContainsBy(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
@@ -259,4 +269,25 @@ func TestWithoutEmpty(t *testing.T) {
 	is.Equal(result1, []int{1, 2})
 	is.Equal(result2, []int{1, 2})
 	is.Equal(result3, []int{})
+}
+
+func TestIntersectN(t *testing.T) {
+	type args struct {
+		first  []int
+		arrays [][]int
+	}
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		{"test01", args{[]int{0, 1, 2}, [][]int{{1, 3, 5}, {1, 4, 6}}}, []int{1}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IntersectN(tt.args.first, tt.args.arrays...); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("IntersectN() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }

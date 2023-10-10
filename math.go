@@ -1,29 +1,30 @@
 package goutils
 
 import (
-	. "github.com/mudssky/goutils/constraints"
+	c "github.com/mudssky/goutils/constraints"
 )
 
-// 泛型，绝对值
-func Abs[T Number](num T) (res T) {
+// Abs 泛型，绝对值
+func Abs[T c.Number](num T) (res T) {
 	if num < 0 {
 		return -num
 	}
 	return num
 }
 
-// 泛型，返回最大值
+// MaxN 泛型，返回多个数最大值
 // 暂不对参数数量不符合的清情况做特殊处理
-func Max[T Number](nums ...T) (res T) {
-	length := len(nums)
-	if length < 1 {
-		panic("arguments is empty")
-	}
-	res = nums[0]
-	for i := 1; i < length; i++ {
-		if nums[i] > res {
-			res = nums[i]
+func MaxN[T c.Number](first T, others ...T) (res T) {
+	res = first
+	for _, v := range others {
+		if v > res {
+			res = v
 		}
 	}
 	return
+}
+
+// Max 泛型，返回两个数中最大值
+func Max[T c.Number](num1 T, num2 T) (res T) {
+	return MaxN(num1, num2)
 }

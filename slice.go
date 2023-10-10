@@ -11,6 +11,7 @@ import (
 // the final chunk will be the remaining elements.
 //
 // 对切片按照大小拆分
+//
 // Chunk([]int{0, 1, 2, 3, 4, 5}, 2)
 // [][]int{{0, 1}, {2, 3}, {4, 5}}
 func Chunk[T any](collection []T, size int) [][]T {
@@ -73,11 +74,12 @@ func Filter[V any](collection []V, predicate func(item V, index int) bool) []V {
 	return result
 }
 
-// 这个是lodash里面没有的，因为callback是同时执行filter和map的逻辑的。lodash里面都是单一功能函数
 // FilterMap returns a slice which obtained after both filtering and mapping using the given callback function.
 // The callback function should return two values:
 //   - the result of the mapping operation and
 //   - whether the result element should be included or not.
+//
+// 这个是lodash里面没有的，因为callback是同时执行filter和map的逻辑的。lodash里面都是单一功能函数
 func FilterMap[T any, R any](collection []T, callback func(item T, index int) (R, bool)) []R {
 	result := []R{}
 	for i, item := range collection {
@@ -88,6 +90,7 @@ func FilterMap[T any, R any](collection []T, callback func(item T, index int) (R
 	return result
 }
 
+// FlatMap,和Map的区别是可以对切片的每一项执行一个类型转换
 func FlatMap[T any, R any](collection []T, iteratee func(item T, index int) []R) []R {
 	result := make([]R, 0, len(collection))
 
@@ -99,6 +102,8 @@ func FlatMap[T any, R any](collection []T, iteratee func(item T, index int) []R)
 }
 
 // Drop drops n elements from the beginning of a slice or array.
+//
+// 移除前个元素
 func Drop[T any](collection []T, n int) []T {
 	if len(collection) <= n {
 		return []T{}
@@ -110,6 +115,8 @@ func Drop[T any](collection []T, n int) []T {
 }
 
 // DropRight drops n elements from the end of a slice or array.
+//
+// 移除后n个元素
 func DropRight[T any](collection []T, n int) []T {
 	if len(collection) <= n {
 		return []T{}
@@ -135,6 +142,8 @@ func DropWhile[T any](collection []T, predicate func(item T) bool) []T {
 }
 
 // DropRightWhile drops elements from the end of a slice or array while the predicate returns true.
+//
+// 如果predicate返回true，移除后n个元素
 func DropRightWhile[T any](collection []T, predicate func(item T) bool) []T {
 	i := len(collection) - 1
 	for ; i >= 0; i-- {
@@ -162,6 +171,8 @@ func Fill[T Clonable[T]](collection []T, initial T) []T {
 }
 
 // Flatten returns an array a single level deep.
+//
+// 展平二维数组
 func Flatten[T any](collection [][]T) []T {
 	totalLen := 0
 	for i := range collection {
@@ -177,6 +188,8 @@ func Flatten[T any](collection [][]T) []T {
 }
 
 // Reverse reverses array so that the first element becomes the last, the second element becomes the second to last, and so on.
+//
+// 数组反向
 func Reverse[T any](collection []T) []T {
 	length := len(collection)
 	half := length / 2
@@ -190,6 +203,8 @@ func Reverse[T any](collection []T) []T {
 }
 
 // Count counts the c.Number of elements in the collection that compare equal to value.
+//
+// 返回集合中的等于某个值元素个数
 func Count[T comparable](collection []T, value T) (count int) {
 	for _, item := range collection {
 		if item == value {
@@ -201,6 +216,8 @@ func Count[T comparable](collection []T, value T) (count int) {
 }
 
 // CountBy counts the c.Number of elements in the collection for which predicate is true.
+//
+// 同Count，但是用函数判断
 func CountBy[T any](collection []T, predicate func(item T) bool) (count int) {
 	for _, item := range collection {
 		if predicate(item) {
@@ -212,6 +229,8 @@ func CountBy[T any](collection []T, predicate func(item T) bool) (count int) {
 }
 
 // CountValues counts the c.Number of each element in the collection.
+//
+// 统计集合中的元素，返回一个Map
 func CountValues[T comparable](collection []T) map[T]int {
 	result := make(map[T]int)
 
@@ -223,7 +242,9 @@ func CountValues[T comparable](collection []T) map[T]int {
 }
 
 // CountValuesBy counts the c.Number of each element return from mapper function.
-// Is equivalent to chaining lo.Map and lo.CountValues.
+// Is equivalent to chaining Map and CountValues.
+//
+// 同CountValues，但是使用一个映射函数
 func CountValuesBy[T any, U comparable](collection []T, mapper func(item T) U) map[U]int {
 	result := make(map[U]int)
 
@@ -235,6 +256,8 @@ func CountValuesBy[T any, U comparable](collection []T, mapper func(item T) U) m
 }
 
 // ForEach iterates over elements of collection and invokes iteratee for each element.
+//
+// 类似js的ForEach方法
 func ForEach[T any](collection []T, iteratee func(item T, index int)) {
 	for i, item := range collection {
 		iteratee(item, i)
@@ -242,6 +265,14 @@ func ForEach[T any](collection []T, iteratee func(item T, index int)) {
 }
 
 // GroupBy returns an object composed of keys generated from the results of running each element of collection through iteratee.
+//
+// 使用函数映射(传入值)来分组
+//
+//	groups := goutils.GroupBy([]int{0, 1, 2, 3, 4, 5}, func(i int) int {
+//	    return i%3
+//	})
+//
+// map[int][]int{0: []int{0, 3}, 1: []int{1, 4}, 2: []int{2, 5}}
 func GroupBy[T any, U comparable](collection []T, iteratee func(item T) U) map[U][]T {
 	result := map[U][]T{}
 
@@ -255,6 +286,8 @@ func GroupBy[T any, U comparable](collection []T, iteratee func(item T) U) map[U
 }
 
 // KeyBy transforms a slice or an array of structs to a map based on a pivot callback.
+//
+// 和GroupBy类似，但是不分组，也就是最后得到的map，值不是切片
 func KeyBy[K comparable, V any](collection []V, iteratee func(item V) K) map[K]V {
 	result := make(map[K]V, len(collection))
 
@@ -269,6 +302,19 @@ func KeyBy[K comparable, V any](collection []V, iteratee func(item V) K) map[K]V
 // PartitionBy returns an array of elements split into groups. The order of grouped values is
 // determined by the order they occur in collection. The grouping is generated from the results
 // of running each element of collection through iteratee.
+//
+// 根据函数映射返回的不同值分组，返回一个二维切片
+//
+//	partitions := goutils.PartitionBy([]int{-2, -1, 0, 1, 2, 3, 4, 5}, func(x int) string {
+//	    if x < 0 {
+//	        return "negative"
+//	    } else if x%2 == 0 {
+//	        return "even"
+//	    }
+//	    return "odd"
+//	})
+//
+// [][]int{{-2, -1}, {0, 2, 4}, {1, 3, 5}}
 func PartitionBy[T any, K comparable](collection []T, iteratee func(item T) K) [][]T {
 	result := [][]T{}
 	seen := map[K]int{}
@@ -295,6 +341,8 @@ func PartitionBy[T any, K comparable](collection []T, iteratee func(item T) K) [
 
 // Reduce reduces collection to a value which is the accumulated result of running each element in collection
 // through accumulator, where each successive invocation is supplied the return value of the previous.
+//
+// 经典的Reduce方法
 func Reduce[T any, R any](collection []T, accumulator func(agg R, item T, index int) R, initial R) R {
 	for i, item := range collection {
 		initial = accumulator(initial, item, i)
@@ -304,6 +352,8 @@ func Reduce[T any, R any](collection []T, accumulator func(agg R, item T, index 
 }
 
 // ReduceRight helper is like Reduce except that it iterates over elements of collection from right to left.
+//
+// 从右向左的Reduce
 func ReduceRight[T any, R any](collection []T, accumulator func(agg R, item T, index int) R, initial R) R {
 	for i := len(collection) - 1; i >= 0; i-- {
 		initial = accumulator(initial, collection[i], i)
@@ -312,20 +362,9 @@ func ReduceRight[T any, R any](collection []T, accumulator func(agg R, item T, i
 	return initial
 }
 
-// Reject is the opposite of Filter, this method returns the elements of collection that predicate does not return truthy for.
-func Reject[V any](collection []V, predicate func(item V, index int) bool) []V {
-	result := []V{}
-
-	for i, item := range collection {
-		if !predicate(item, i) {
-			result = append(result, item)
-		}
-	}
-
-	return result
-}
-
 // Shuffle returns an array of shuffled values. Uses the Fisher-Yates shuffle algorithm.
+//
+// 对切片数组原地洗牌
 func Shuffle[T any](collection []T) []T {
 	rand.Shuffle(len(collection), func(i, j int) {
 		collection[i], collection[j] = collection[j], collection[i]
@@ -336,6 +375,8 @@ func Shuffle[T any](collection []T) []T {
 
 // Times invokes the iteratee n times, returning an array of the results of each invocation.
 // The iteratee is invoked with index as argument.
+//
+// 执行iteratee count次数
 func Times[T any](count int, iteratee func(index int) T) []T {
 	result := make([]T, count)
 
@@ -347,6 +388,14 @@ func Times[T any](count int, iteratee func(index int) T) []T {
 }
 
 // Interleave round-robin alternating input slices and sequentially appending value at index into result
+//
+// 交替输入切片到结果
+//
+// interleaved := goutils.Interleave([]int{1, 4, 7}, []int{2, 5, 8}, []int{3, 6, 9})
+// []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+//
+// interleaved := goutils.Interleave([]int{1}, []int{2, 5, 8}, []int{3, 6}, []int{4, 7, 9, 10})
+// []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 func Interleave[T any](collections ...[]T) []T {
 	if len(collections) == 0 {
 		return []T{}
@@ -384,6 +433,8 @@ func Interleave[T any](collections ...[]T) []T {
 }
 
 // Repeat builds a slice with N copies of initial value.
+//
+// 重复initial n次，返回一个切片
 func Repeat[T Clonable[T]](count int, initial T) []T {
 	result := make([]T, 0, count)
 
@@ -394,20 +445,11 @@ func Repeat[T Clonable[T]](count int, initial T) []T {
 	return result
 }
 
-// RepeatBy builds a slice with values returned by N calls of callback.
-func RepeatBy[T any](count int, predicate func(index int) T) []T {
-	result := make([]T, 0, count)
-
-	for i := 0; i < count; i++ {
-		result = append(result, predicate(i))
-	}
-
-	return result
-}
-
 // Associate returns a map containing key-value pairs provided by transform function applied to elements of the given slice.
 // If any of two pairs would have the same key the last one gets added to the map.
 // The order of keys in returned map is not specified and is not guaranteed to be the same from the original array.
+//
+// 传入对象切片，然后从对象中取值拼接成map
 func Associate[T any, K comparable, V any](collection []T, transform func(item T) (K, V)) map[K]V {
 	result := make(map[K]V, len(collection))
 
@@ -425,28 +467,6 @@ func Associate[T any, K comparable, V any](collection []T, transform func(item T
 // Alias of Associate().
 func SliceToMap[T any, K comparable, V any](collection []T, transform func(item T) (K, V)) map[K]V {
 	return Associate(collection, transform)
-}
-
-// Subset returns a copy of a slice from `offset` up to `length` elements. Like `slice[start:start+length]`, but does not panic on overflow.
-func Subset[T any](collection []T, offset int, length uint) []T {
-	size := len(collection)
-
-	if offset < 0 {
-		offset = size + offset
-		if offset < 0 {
-			offset = 0
-		}
-	}
-
-	if offset > size {
-		return []T{}
-	}
-
-	if length > uint(size)-uint(offset) {
-		length = uint(size - offset)
-	}
-
-	return collection[offset : offset+int(length)]
 }
 
 // SliceSafe returns a copy of a slice from `start` up to, but not including `end`. Like `slice[start:end]`, but does not panic on overflow.
@@ -475,8 +495,10 @@ func SliceSafe[T any](collection []T, start int, end int) []T {
 	return collection[start:end]
 }
 
-// Replace returns a copy of the slice with the first n non-overlapping instances of old replaced by new.
-func Replace[T comparable](collection []T, old T, new T, n int) []T {
+// ReplaceN returns a copy of the slice with the first n non-overlapping instances of old replaced by new.
+//
+// 替换元素前n个,返回一个副本
+func ReplaceN[T comparable](collection []T, old T, new T, n int) []T {
 	result := make([]T, len(collection))
 	copy(result, collection)
 
@@ -491,11 +513,15 @@ func Replace[T comparable](collection []T, old T, new T, n int) []T {
 }
 
 // ReplaceAll returns a copy of the slice with all non-overlapping instances of old replaced by new.
+//
+// 替换所有元素,返回一个副本
 func ReplaceAll[T comparable](collection []T, old T, new T) []T {
-	return Replace(collection, old, new, -1)
+	return ReplaceN(collection, old, new, -1)
 }
 
 // IsSorted checks if a slice is sorted.
+//
+// 判断切片是否排序好
 func IsSorted[T c.Ordered](collection []T) bool {
 	for i := 1; i < len(collection); i++ {
 		if collection[i-1] > collection[i] {
@@ -507,6 +533,8 @@ func IsSorted[T c.Ordered](collection []T) bool {
 }
 
 // IsSortedByKey checks if a slice is sorted by iteratee.
+//
+// 使用函数映射后判断排序
 func IsSortedByKey[T any, K c.Ordered](collection []T, iteratee func(item T) K) bool {
 	size := len(collection)
 
@@ -551,4 +579,94 @@ func RangeWithStep[T c.Number](start, end, step T) (res []T, err error) {
 		res[i] = res[i-1] + step
 	}
 	return
+}
+
+// Concat 返回一个拼接好的新数组
+func Concat[T any](collection []T, values ...T) []T {
+	result := make([]T, 0, len(collection)+len(values))
+	result = append(result, collection...)
+	result = append(result, values...)
+	return result
+}
+
+// Difference 生成第一个数组中独有的元素组成的新数组
+// collection是检查的数组,excludes是需要排除的值的数组
+func Difference[T comparable](collection []T, excludes []T) []T {
+	result := []T{}
+	// 初始化需要排除的map,便于查找
+	excludesMap := map[T]struct{}{}
+	for _, elem := range excludes {
+		excludesMap[elem] = struct{}{}
+	}
+
+	// 遍历第一个数组,放入第二个数组中不存在的元素,
+	for _, elem := range collection {
+		if _, ok := excludesMap[elem]; !ok {
+			result = append(result, elem)
+		}
+	}
+
+	return result
+}
+
+// 生成第一个数组中独有的元素组成的新数组,对比较一个元素调用iteratee转换后的结果
+func DifferenceBy[T comparable, R comparable](collection []T, excludes []T, iteratee func(item T) R) []T {
+	result := []T{}
+	// 初始化需要排除的map,便于查找
+	excludesMap := map[R]struct{}{}
+	for _, elem := range excludes {
+		exclude := iteratee(elem)
+		excludesMap[exclude] = struct{}{}
+	}
+	// 遍历第一个数组,放入第二个数组中不存在的元素,
+	for _, elem := range collection {
+		compareElem := iteratee(elem)
+		if _, ok := excludesMap[compareElem]; !ok {
+			result = append(result, elem)
+		}
+	}
+
+	return result
+}
+
+// SortedIndex 判断一个数据应该放入增序排序数组的哪个位置
+func SortedIndex[T c.Ordered](array []T, value T) int {
+	length := len(array)
+	if length == 0 {
+		return 0
+	}
+	for i := 0; i < length; i++ {
+		if value < array[i] {
+			return i
+		}
+	}
+	return length
+}
+
+// 创建一个数组，包含所有数组中的唯一值
+func Xor[T comparable](arrays ...[]T) []T {
+	// 创建一个 map，用于统计元素在几个数组中出现过
+	m := make(map[T]int)
+	for _, a := range arrays {
+		for _, v := range a {
+			m[v]++
+		}
+	}
+
+	res := []T{}
+	// 遍历 map，找出出现在所有数组中的元素
+	for k, v := range m {
+		if v < 2 {
+			res = append(res, k)
+		}
+	}
+
+	return res
+}
+
+// 反向遍历
+func ForEachRight[T any](collection []T, iteratee func(item T, index int)) {
+	for i := len(collection) - 1; i >= 0; i-- {
+		iteratee(collection[i], i)
+	}
 }
