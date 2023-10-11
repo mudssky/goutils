@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"math/rand"
 
-	. "github.com/mudssky/goutils/constraints"
+	c "github.com/mudssky/goutils/constraints"
 )
 
 // IndexOf returns the index at which the first occurrence of a value is found in an array or return -1
 // if the value cannot be found.
+//
+// 类似js的indexOf
 func IndexOf[T comparable](collection []T, element T) int {
 	for i, item := range collection {
 		if item == element {
@@ -21,6 +23,8 @@ func IndexOf[T comparable](collection []T, element T) int {
 
 // LastIndexOf returns the index at which the last occurrence of a value is found in an array or return -1
 // if the value cannot be found.
+//
+// 类似js的同名函数
 func LastIndexOf[T comparable](collection []T, element T) int {
 	length := len(collection)
 
@@ -34,6 +38,7 @@ func LastIndexOf[T comparable](collection []T, element T) int {
 }
 
 // Find search an element in a slice based on a predicate. It returns element and true if element was found.
+//
 // 因为元素为空的情况,此时predicate判断为空,此时返回值都是空,没法判断有没有找到,所以加了一个bool的返回值区分
 func Find[T any](collection []T, predicate func(item T) bool) (T, bool) {
 	for _, item := range collection {
@@ -76,7 +81,9 @@ func FindLastIndexOf[T any](collection []T, predicate func(item T) bool) (T, int
 
 // Nth returns the element at index `nth` of collection. If `nth` is negative, the nth element
 // from the end is returned. An error is returned when nth is out of slice bounds.
-func Nth[T any, N Integer](collection []T, nth N) (T, error) {
+//
+// 类似js的at
+func Nth[T any, N c.Integer](collection []T, nth N) (T, error) {
 	n := int(nth)
 	l := len(collection)
 	if n >= l || -n > l {
@@ -92,7 +99,9 @@ func Nth[T any, N Integer](collection []T, nth N) (T, error) {
 
 // Max searches the maximum value of a collection.
 // Returns zero value when collection is empty.
-func MaxOfCollection[T Ordered](collection []T) T {
+//
+// 返回一个切片中的最大值
+func MaxOfCollection[T c.Ordered](collection []T) T {
 	var max T
 
 	if len(collection) == 0 {
@@ -113,6 +122,8 @@ func MaxOfCollection[T Ordered](collection []T) T {
 }
 
 // Without returns slice excluding all given values.
+//
+// 排除exclude中的值
 func Without[T comparable](collection []T, exclude ...T) []T {
 
 	result := make([]T, 0, len(collection))
@@ -125,6 +136,8 @@ func Without[T comparable](collection []T, exclude ...T) []T {
 }
 
 // WithoutEmpty returns slice excluding empty values.
+//
+// 排除empty值
 func WithoutEmpty[T comparable](collection []T) []T {
 	var empty T
 
@@ -139,6 +152,8 @@ func WithoutEmpty[T comparable](collection []T) []T {
 }
 
 // Sample returns a random item from collection.
+//
+// 从列表中随机取一个值
 func Sample[T any](collection []T) T {
 	size := len(collection)
 	if size == 0 {
@@ -149,6 +164,8 @@ func Sample[T any](collection []T) T {
 }
 
 // Samples returns N random unique items from collection.
+//
+// 从列表中随机取n个值
 func Samples[T any](collection []T, count int) []T {
 	size := len(collection)
 

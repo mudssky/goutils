@@ -1,6 +1,8 @@
 package goutils
 
 // Intersect returns the intersection between two collections.
+//
+// 两个列表取交集
 func Intersect[T comparable](list1 []T, list2 []T) []T {
 	result := []T{}
 	seen := map[T]struct{}{}
@@ -47,6 +49,8 @@ func IntersectN[T comparable](first []T, arrays ...[]T) []T {
 
 // Union returns all distinct elements from given collections.
 // result returns will not change the order of elements relatively.
+//
+// 求并集
 func Union[T comparable](lists ...[]T) []T {
 	result := []T{}
 	seen := map[T]struct{}{}
@@ -65,6 +69,8 @@ func Union[T comparable](lists ...[]T) []T {
 
 // Uniq returns a duplicate-free version of an array, in which only the first occurrence of each element is kept.
 // The order of result values is determined by the order they occur in the array.
+//
+// 去重
 func Uniq[T comparable](collection []T) []T {
 	result := make([]T, 0, len(collection))
 	seen := make(map[T]struct{}, len(collection))
@@ -84,6 +90,8 @@ func Uniq[T comparable](collection []T) []T {
 // UniqBy returns a duplicate-free version of an array, in which only the first occurrence of each element is kept.
 // The order of result values is determined by the order they occur in the array. It accepts `iteratee` which is
 // invoked for each element in array to generate the criterion by which uniqueness is computed.
+//
+// 使用iteratee映射来判断重复
 func UniqBy[T any, U comparable](collection []T, iteratee func(item T) U) []T {
 	result := make([]T, 0, len(collection))
 	seen := make(map[U]struct{}, len(collection))
@@ -103,6 +111,8 @@ func UniqBy[T any, U comparable](collection []T, iteratee func(item T) U) []T {
 }
 
 // Contains returns true if an element is present in a collection.
+//
+// 类似js array.contains
 func Contains[T comparable](collection []T, element T) bool {
 	for _, item := range collection {
 		if item == element {
@@ -119,6 +129,8 @@ func Includes[T comparable](collection []T, element T) bool {
 }
 
 // ContainsBy returns true if predicate function return true.
+//
+// 用函数判断Contain
 func ContainsBy[T any](collection []T, predicate func(item T) bool) bool {
 	for _, item := range collection {
 		if predicate(item) {
@@ -130,6 +142,8 @@ func ContainsBy[T any](collection []T, predicate func(item T) bool) bool {
 }
 
 // Every returns true if all elements of a subset are contained into a collection or if the subset is empty.
+//
+// 判断subset子集中的内容是否都在collection列表中存在
 func Every[T comparable](collection []T, subset []T) bool {
 	for _, elem := range subset {
 		if !Contains(collection, elem) {
@@ -141,6 +155,8 @@ func Every[T comparable](collection []T, subset []T) bool {
 }
 
 // EveryBy returns true if the predicate returns true for all of the elements in the collection or if the collection is empty.
+//
+// 类似js的array.every
 func EveryBy[T any](collection []T, predicate func(item T) bool) bool {
 	for _, v := range collection {
 		if !predicate(v) {
@@ -153,6 +169,8 @@ func EveryBy[T any](collection []T, predicate func(item T) bool) bool {
 
 // Some returns true if at least 1 element of a subset is contained into a collection.
 // If the subset is empty Some returns false.
+//
+//
 func Some[T comparable](collection []T, subset []T) bool {
 	for _, elem := range subset {
 		if Contains(collection, elem) {
@@ -165,6 +183,7 @@ func Some[T comparable](collection []T, subset []T) bool {
 
 // SomeBy returns true if the predicate returns true for any of the elements in the collection.
 // If the collection is empty SomeBy returns false.
+//
 func SomeBy[T any](collection []T, predicate func(item T) bool) bool {
 	for _, v := range collection {
 		if predicate(v) {

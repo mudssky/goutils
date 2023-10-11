@@ -160,7 +160,7 @@ func DropRightWhile[T any](collection []T, predicate func(item T) bool) []T {
 //
 // 需要实现Clonable接口,对基本类型的切片来说很不方便
 // 但是估计未来官方应该要内置一个类似Clonable的泛型,这样才比较好写
-func Fill[T Clonable[T]](collection []T, initial T) []T {
+func Fill[T c.Clonable[T]](collection []T, initial T) []T {
 	result := make([]T, 0, len(collection))
 
 	for range collection {
@@ -435,7 +435,7 @@ func Interleave[T any](collections ...[]T) []T {
 // Repeat builds a slice with N copies of initial value.
 //
 // 重复initial n次，返回一个切片
-func Repeat[T Clonable[T]](count int, initial T) []T {
+func Repeat[T c.Clonable[T]](count int, initial T) []T {
 	result := make([]T, 0, count)
 
 	for i := 0; i < count; i++ {
