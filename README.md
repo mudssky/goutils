@@ -1,3 +1,7 @@
 # goutils
 
-# Readme title
+## Install
+
+```
+go get github.com/mudssky/goutils
+```
