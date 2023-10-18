@@ -235,3 +235,24 @@ func TestLastIndex(t *testing.T) {
 		})
 	}
 }
+
+func TestHasDuplicates(t *testing.T) {
+	type args struct {
+		collection []string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{"has dup", args{collection: []string{"a", "b", "ggg", "d", "e", "ggg", "g", "h", "i"}}, true},
+		{"no dup", args{collection: []string{"a", "b", "c", "d", "e", "f", "g", "h", "i"}}, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := HasDuplicates(tt.args.collection); got != tt.want {
+				t.Errorf("HasDuplicates() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

@@ -187,3 +187,16 @@ func Samples[T any](collection []T, count int) []T {
 
 	return results
 }
+
+// 检查一个列表中是否有重复项
+func HasDuplicates[T comparable](collection []T) bool {
+	length := len(collection)
+	seen := make(map[T]bool, length)
+	for _, v := range collection {
+		if _, ok := seen[v]; ok {
+			return true
+		}
+		seen[v] = true
+	}
+	return false
+}
