@@ -2,10 +2,8 @@ package goutils
 
 import (
 	"fmt"
-	"math/rand"
 	"sort"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -141,7 +139,8 @@ func TestSample(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
 
-	rand.Seed(time.Now().UnixNano())
+	// As of Go 1.20, rand.Seed is no longer needed
+	// The global random number generator is now automatically seeded
 
 	result1 := Sample([]string{"a", "b", "c"})
 	result2 := Sample([]string{})
@@ -154,7 +153,8 @@ func TestSamples(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
 
-	rand.Seed(time.Now().UnixNano())
+	// As of Go 1.20, rand.Seed is no longer needed
+	// The global random number generator is now automatically seeded
 
 	result1 := Samples([]string{"a", "b", "c"}, 3)
 	result2 := Samples([]string{}, 3)
