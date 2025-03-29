@@ -1,6 +1,7 @@
 {
   "scripts": {
     "test": "go test ./...",
+    "test:watch": "watchexec.exe --restart --clear  --exts=go  --shell=pwsh 'runScripts.ps1 -CommandName test'",
     "coverage": "go test ./... -coverprofile=coverage",
     "coverage:html": "runScripts.ps1 -CommandName coverage && go tool cover -html=coverage",
     "coverage:watch": "watchexec.exe --restart --clear  --exts=go  --shell=pwsh 'runScripts.ps1 -CommandName coverage:html'",
