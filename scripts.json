@@ -9,6 +9,7 @@
     "doc:dev": "watchexec.exe --restart --clear  --exts go  'pkgsite -http localhost:13760'",
     "doc": "pkgsite -http localhost:13760",
     "lint": "golangci-lint run ./...",
-    "install": "pwsh install.ps1"
+    "install": "pwsh publish.ps1",
+    "publish": ""
   }
 }
