@@ -282,6 +282,7 @@ func TestIntersectN(t *testing.T) {
 		want []int
 	}{
 		{"test01", args{[]int{0, 1, 2}, [][]int{{1, 3, 5}, {1, 4, 6}}}, []int{1}},
+		{"test02", args{[]int{0, 1, 2, 3, 4}, [][]int{{1, 2}, {1, 3}}}, []int{1}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
