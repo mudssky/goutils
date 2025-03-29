@@ -7,6 +7,8 @@ import (
 // Abs returns the absolute value of a number.
 // It works with any numeric type that satisfies the Number constraint.
 //
+// Deprecated: After Go 1.21, use the built-in abs functions instead.
+//
 // Abs 泛型，绝对值
 func Abs[T c.Number](num T) (res T) {
 	if num < 0 {
