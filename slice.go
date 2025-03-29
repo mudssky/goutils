@@ -11,9 +11,10 @@ import (
 // the final chunk will be the remaining elements.
 //
 // 对切片按照大小拆分
+// 示例:
 //
-// Chunk([]int{0, 1, 2, 3, 4, 5}, 2)
-// [][]int{{0, 1}, {2, 3}, {4, 5}}
+//	Chunk([]int{0, 1, 2, 3, 4, 5}, 2) // 返回: [][]int{{0, 1}, {2, 3}, {4, 5}}
+//	Chunk([]string{"a", "b", "c", "d"}, 3) // 返回: [][]string{{"a", "b", "c"}, {"d"}}
 func Chunk[T any](collection []T, size int) [][]T {
 	if size <= 0 {
 		panic("Second parameter must be greater than 0")
@@ -40,6 +41,10 @@ func Chunk[T any](collection []T, size int) [][]T {
 // Compact returns a slice of all non-zero elements.
 //
 // 返回所有非零值元素的集合
+// 示例:
+//
+//	Compact([]int{0, 1, 0, 2}) // 返回: [1, 2]
+//	Compact([]string{"", "a", "", "b"}) // 返回: ["a", "b"]
 func Compact[T comparable](collection []T) []T {
 	var zero T
 
@@ -62,6 +67,10 @@ func Compact[T comparable](collection []T) []T {
 // The iteratee function receives each item and its index, and should return a value of the new type.
 //
 // 将切片中的每个元素通过iteratee函数转换为新类型
+// 示例:
+//
+//	Map([]int{1, 2, 3}, func(i int, _ int) string { return strconv.Itoa(i) }) // 返回: ["1", "2", "3"]
+//	Map([]string{"a", "b"}, func(s string, _ int) int { return len(s) }) // 返回: [1, 1]
 func Map[T any, R any](collection []T, iteratee func(item T, index int) R) []R {
 	result := make([]R, len(collection))
 	for i, item := range collection {
@@ -76,6 +85,10 @@ func Map[T any, R any](collection []T, iteratee func(item T, index int) R) []R {
 // The function creates a new slice and does not modify the original collection.
 //
 // 过滤切片，返回所有满足条件的元素
+// 示例:
+//
+//	Filter([]int{1, 2, 3, 4}, func(i int, _ int) bool { return i%2 == 0 }) // 返回: [2, 4]
+//	Filter([]string{"a", "ab", "abc"}, func(s string, _ int) bool { return len(s) > 1 }) // 返回: ["ab", "abc"]
 func Filter[V any](collection []V, predicate func(item V, index int) bool) []V {
 	result := make([]V, 0, len(collection))
 	for i, item := range collection {

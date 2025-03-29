@@ -11,6 +11,9 @@ import (
 // if the value cannot be found.
 //
 // 类似js的indexOf
+// 示例:
+// IndexOf([]int{1, 2, 3}, 2) // 返回: 1
+// IndexOf([]string{"a", "b", "c"}, "d") // 返回: -1
 func IndexOf[T comparable](collection []T, element T) int {
 	for i, item := range collection {
 		if item == element {
@@ -25,6 +28,9 @@ func IndexOf[T comparable](collection []T, element T) int {
 // if the value cannot be found.
 //
 // 类似js的同名函数
+// 示例:
+// LastIndexOf([]int{1, 2, 2, 3}, 2) // 返回: 2
+// LastIndexOf([]string{"a", "b", "a"}, "a") // 返回: 2
 func LastIndexOf[T comparable](collection []T, element T) int {
 	length := len(collection)
 
@@ -40,6 +46,9 @@ func LastIndexOf[T comparable](collection []T, element T) int {
 // Find search an element in a slice based on a predicate. It returns element and true if element was found.
 //
 // 因为元素为空的情况,此时predicate判断为空,此时返回值都是空,没法判断有没有找到,所以加了一个bool的返回值区分
+// 示例:
+// Find([]int{1, 2, 3}, func(v int) bool { return v > 1 }) // 返回: 2, true
+// Find([]string{}, func(v string) bool { return len(v) > 0 }) // 返回: "", false
 func Find[T any](collection []T, predicate func(item T) bool) (T, bool) {
 	for _, item := range collection {
 		if predicate(item) {
@@ -53,6 +62,9 @@ func Find[T any](collection []T, predicate func(item T) bool) (T, bool) {
 
 // FindIndexOf searches an element in a slice based on a predicate and returns the index and true.
 // It returns -1 and false if the element is not found.
+// 示例:
+// FindIndexOf([]int{1, 2, 3}, func(v int) bool { return v == 2 }) // 返回: 2, 1, true
+// FindIndexOf([]string{"a", "b"}, func(v string) bool { return v == "c" }) // 返回: "", -1, false
 func FindIndexOf[T any](collection []T, predicate func(item T) bool) (T, int, bool) {
 	for i, item := range collection {
 		if predicate(item) {
@@ -66,6 +78,9 @@ func FindIndexOf[T any](collection []T, predicate func(item T) bool) (T, int, bo
 
 // FindLastIndexOf searches last element in a slice based on a predicate and returns the index and true.
 // It returns -1 and false if the element is not found.
+// 示例:
+// FindLastIndexOf([]int{1, 2, 2, 3}, func(v int) bool { return v == 2 }) // 返回: 2, 2, true
+// FindLastIndexOf([]string{"a", "b"}, func(v string) bool { return v == "c" }) // 返回: "", -1, false
 func FindLastIndexOf[T any](collection []T, predicate func(item T) bool) (T, int, bool) {
 	length := len(collection)
 
@@ -83,6 +98,10 @@ func FindLastIndexOf[T any](collection []T, predicate func(item T) bool) (T, int
 // from the end is returned. An error is returned when nth is out of slice bounds.
 //
 // 类似js的at
+// 示例:
+// Nth([]int{1, 2, 3}, 1) // 返回: 2, nil
+// Nth([]string{"a", "b", "c"}, -1) // 返回: "c", nil
+// Nth([]int{}, 0) // 返回: 0, error
 func Nth[T any, N c.Integer](collection []T, nth N) (T, error) {
 	n := int(nth)
 	l := len(collection)
@@ -103,6 +122,10 @@ func Nth[T any, N c.Integer](collection []T, nth N) (T, error) {
 // If the collection is empty, it returns the zero value of type T.
 //
 // 返回一个切片中的最大值
+// 示例:
+// MaxOfCollection([]int{1, 3, 2}) // 返回: 3
+// MaxOfCollection([]string{"a", "c", "b"}) // 返回: "c"
+// MaxOfCollection([]int{}) // 返回: 0
 func MaxOfCollection[T c.Ordered](collection []T) T {
 	var max T
 
@@ -129,6 +152,9 @@ func MaxOfCollection[T c.Ordered](collection []T) T {
 // The function creates a new slice and does not modify the original collection.
 //
 // 排除exclude中的值
+// 示例:
+// Without([]int{1, 2, 3}, 2) // 返回: [1, 3]
+// Without([]string{"a", "b", "c"}, "a", "c") // 返回: ["b"]
 func Without[T comparable](collection []T, exclude ...T) []T {
 
 	result := make([]T, 0, len(collection))
@@ -146,6 +172,9 @@ func Without[T comparable](collection []T, exclude ...T) []T {
 // The function creates a new slice and does not modify the original collection.
 //
 // 排除empty值
+// 示例:
+// WithoutEmpty([]int{0, 1, 2, 0}) // 返回: [1, 2]
+// WithoutEmpty([]string{"", "a", "", "b"}) // 返回: ["a", "b"]
 func WithoutEmpty[T comparable](collection []T) []T {
 	var empty T
 
@@ -165,6 +194,9 @@ func WithoutEmpty[T comparable](collection []T) []T {
 // If the collection is empty, it returns the zero value of type T and an error.
 //
 // 从列表中随机取一个值
+// 示例:
+// Sample([]int{1, 2, 3}) // 可能返回: 2
+// Sample([]string{"a", "b", "c"}) // 可能返回: "b"
 func Sample[T any](collection []T) T {
 	size := len(collection)
 	if size == 0 {
@@ -179,6 +211,9 @@ func Sample[T any](collection []T) T {
 // If count is greater than the collection size, it returns all elements in random order.
 //
 // 从列表中随机取n个值
+// 示例:
+// Samples([]int{1, 2, 3, 4}, 2) // 可能返回: [3, 1]
+// Samples([]string{"a", "b", "c"}, 5) // 可能返回: ["c", "a", "b"]
 func Samples[T any](collection []T, count int) []T {
 	size := len(collection)
 
@@ -212,6 +247,9 @@ func Samples[T any](collection []T, count int) []T {
 // The function uses a map to track seen elements, making it an O(n) operation.
 //
 // 检查一个列表中是否有重复项
+// 示例:
+// HasDuplicates([]int{1, 2, 2}) // 返回: true
+// HasDuplicates([]string{"a", "b", "c"}) // 返回: false
 func HasDuplicates[T comparable](collection []T) bool {
 	length := len(collection)
 	seen := make(map[T]bool, length)

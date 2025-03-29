@@ -3,6 +3,9 @@ package goutils
 // Intersect returns the intersection between two collections.
 //
 // 两个列表取交集
+// 示例:
+// Intersect([]int{1, 2, 3}, []int{2, 3, 4}) // 返回: [2, 3]
+// Intersect([]string{"a", "b"}, []string{"b", "c"}) // 返回: ["b"]
 func Intersect[T comparable](list1 []T, list2 []T) []T {
 	// 预分配结果切片容量为较小列表的长度（交集最大可能大小）
 	minLen := len(list1)
@@ -26,6 +29,9 @@ func Intersect[T comparable](list1 []T, list2 []T) []T {
 }
 
 // IntersectN 求任意多个数组的交集数组(n>=1),注意传入的数组都需要经过去重
+// 示例:
+// IntersectN([]int{1, 2}, []int{2, 3}, []int{2, 4}) // 返回: [2]
+// IntersectN([]string{"a", "b"}, []string{"b", "c"}) // 返回: ["b"]
 func IntersectN[T comparable](first []T, arrays ...[]T) []T {
 	length := len(arrays) + 1
 
@@ -64,6 +70,9 @@ func IntersectN[T comparable](first []T, arrays ...[]T) []T {
 // result returns will not change the order of elements relatively.
 //
 // 求并集
+// 示例:
+// Union([]int{1, 2}, []int{2, 3}) // 返回: [1, 2, 3]
+// Union([]string{"a"}, []string{"b"}, []string{"a", "c"}) // 返回: ["a", "b", "c"]
 func Union[T comparable](lists ...[]T) []T {
 	// 计算所有列表的总长度作为结果切片的预分配容量（并集最大可能大小）
 	totalLen := 0
@@ -90,6 +99,9 @@ func Union[T comparable](lists ...[]T) []T {
 // The order of result values is determined by the order they occur in the array.
 //
 // 去重
+// 示例:
+// Uniq([]int{1, 2, 2, 3}) // 返回: [1, 2, 3]
+// Uniq([]string{"a", "b", "a"}) // 返回: ["a", "b"]
 func Uniq[T comparable](collection []T) []T {
 	result := make([]T, 0, len(collection))
 	seen := make(map[T]struct{}, len(collection))
@@ -111,6 +123,9 @@ func Uniq[T comparable](collection []T) []T {
 // invoked for each element in array to generate the criterion by which uniqueness is computed.
 //
 // 使用iteratee映射来判断重复
+// 示例:
+// UniqBy([]string{"a", "aa", "aaa"}, func(s string) int { return len(s) }) // 返回: ["a", "aa"]
+// UniqBy([]int{1, 2, 3, 4}, func(i int) int { return i % 2 }) // 返回: [1, 2]
 func UniqBy[T any, U comparable](collection []T, iteratee func(item T) U) []T {
 	result := make([]T, 0, len(collection))
 	seen := make(map[U]struct{}, len(collection))
