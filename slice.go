@@ -43,7 +43,8 @@ func Chunk[T any](collection []T, size int) [][]T {
 func Compact[T comparable](collection []T) []T {
 	var zero T
 
-	result := []T{}
+	// 预分配结果切片容量为原切片长度（最大可能大小）
+	result := make([]T, 0, len(collection))
 
 	for _, item := range collection {
 		if item != zero {
@@ -415,6 +416,7 @@ func Interleave[T any](collections ...[]T) []T {
 		return []T{}
 	}
 
+	// 预分配结果切片容量为所有切片长度之和（结果最大可能大小）
 	result := make([]T, totalSize)
 
 	resultIdx := 0
@@ -592,7 +594,8 @@ func Concat[T any](collection []T, values ...T) []T {
 // Difference 生成第一个数组中独有的元素组成的新数组
 // collection是检查的数组,excludes是需要排除的值的数组
 func Difference[T comparable](collection []T, excludes []T) []T {
-	result := []T{}
+	// 预分配结果切片容量为collection的长度（结果最大可能大小）
+	result := make([]T, 0, len(collection))
 	// 初始化需要排除的map,便于查找
 	excludesMap := map[T]struct{}{}
 	for _, elem := range excludes {
@@ -611,7 +614,8 @@ func Difference[T comparable](collection []T, excludes []T) []T {
 
 // 生成第一个数组中独有的元素组成的新数组,对比较一个元素调用iteratee转换后的结果
 func DifferenceBy[T comparable, R comparable](collection []T, excludes []T, iteratee func(item T) R) []T {
-	result := []T{}
+	// 预分配结果切片容量为collection的长度（结果最大可能大小）
+	result := make([]T, 0, len(collection))
 	// 初始化需要排除的map,便于查找
 	excludesMap := map[R]struct{}{}
 	for _, elem := range excludes {
@@ -647,13 +651,17 @@ func SortedIndex[T c.Ordered](array []T, value T) int {
 func Xor[T comparable](arrays ...[]T) []T {
 	// 创建一个 map，用于统计元素在几个数组中出现过
 	m := make(map[T]int)
+
+	// 计算所有数组的总长度作为结果切片的预分配容量（最大可能大小）
+	totalLen := 0
 	for _, a := range arrays {
+		totalLen += len(a)
 		for _, v := range a {
 			m[v]++
 		}
 	}
 
-	res := []T{}
+	res := make([]T, 0, totalLen)
 	// 遍历 map，找出出现在所有数组中的元素
 	for k, v := range m {
 		if v < 2 {

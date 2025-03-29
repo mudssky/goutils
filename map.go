@@ -200,6 +200,7 @@ func MapEntries[K1 comparable, V1 any, K2 comparable, V2 any](in map[K1]V1, iter
 
 // MapToSlice transforms a map into a slice based on specific iteratee
 func MapToSlice[K comparable, V any, R any](in map[K]V, iteratee func(key K, value V) R) []R {
+	// 预分配结果切片容量为map的长度（结果最大可能大小）
 	result := make([]R, 0, len(in))
 
 	for k, v := range in {

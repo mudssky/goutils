@@ -171,7 +171,12 @@ func Samples[T any](collection []T, count int) []T {
 
 	copy := append([]T{}, collection...)
 
-	results := []T{}
+	// 预分配结果切片容量为count和size中的较小值（结果最大可能大小）
+	resultSize := count
+	if size < count {
+		resultSize = size
+	}
+	results := make([]T, 0, resultSize)
 
 	for i := 0; i < size && i < count; i++ {
 		copyLength := size - i

@@ -4,7 +4,12 @@ package goutils
 //
 // 两个列表取交集
 func Intersect[T comparable](list1 []T, list2 []T) []T {
-	result := []T{}
+	// 预分配结果切片容量为较小列表的长度（交集最大可能大小）
+	minLen := len(list1)
+	if len(list2) < minLen {
+		minLen = len(list2)
+	}
+	result := make([]T, 0, minLen)
 	seen := map[T]struct{}{}
 
 	for _, elem := range list1 {
@@ -24,6 +29,14 @@ func Intersect[T comparable](list1 []T, list2 []T) []T {
 func IntersectN[T comparable](first []T, arrays ...[]T) []T {
 	length := len(arrays) + 1
 
+	// 找出所有数组中最小的长度，作为结果切片的预分配容量
+	minLen := len(first)
+	for _, a := range arrays {
+		if len(a) < minLen {
+			minLen = len(a)
+		}
+	}
+
 	// 创建一个 map，用于统计元素在几个数组中出现过
 	m := make(map[T]int)
 
@@ -36,7 +49,7 @@ func IntersectN[T comparable](first []T, arrays ...[]T) []T {
 		}
 	}
 
-	res := []T{}
+	res := make([]T, 0, minLen)
 	// 遍历 map，找出出现在所有数组中的元素
 	for k, v := range m {
 		if v == length {
@@ -52,7 +65,13 @@ func IntersectN[T comparable](first []T, arrays ...[]T) []T {
 //
 // 求并集
 func Union[T comparable](lists ...[]T) []T {
-	result := []T{}
+	// 计算所有列表的总长度作为结果切片的预分配容量（并集最大可能大小）
+	totalLen := 0
+	for _, list := range lists {
+		totalLen += len(list)
+	}
+
+	result := make([]T, 0, totalLen)
 	seen := map[T]struct{}{}
 
 	for _, list := range lists {
@@ -169,9 +188,12 @@ func EveryBy[T any](collection []T, predicate func(item T) bool) bool {
 
 // Some returns true if at least 1 element of a subset is contained into a collection.
 // If the subset is empty Some returns false.
-//
-//
 func Some[T comparable](collection []T, subset []T) bool {
+	// 如果子集为空，则返回 false
+	if len(subset) == 0 {
+		return false
+	}
+
 	for _, elem := range subset {
 		if Contains(collection, elem) {
 			return true
@@ -183,7 +205,6 @@ func Some[T comparable](collection []T, subset []T) bool {
 
 // SomeBy returns true if the predicate returns true for any of the elements in the collection.
 // If the collection is empty SomeBy returns false.
-//
 func SomeBy[T any](collection []T, predicate func(item T) bool) bool {
 	for _, v := range collection {
 		if predicate(v) {
