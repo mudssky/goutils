@@ -2,6 +2,9 @@ package goutils
 
 import "reflect"
 
+// Empty returns the zero value of the specified type T.
+// This is useful when you need a zero value of a generic type.
+//
 // 返回指定类型的空值
 func Empty[T any]() T {
 	var zero T
@@ -15,6 +18,9 @@ func ToPtr[T any](x T) *T {
 	return &x
 }
 
+// NullableToPtr returns a pointer to the value if it's not a zero value, otherwise returns nil.
+// This is useful for converting values to pointers only when they have meaningful (non-zero) values.
+//
 // 如果为非零值，返回指针，否则返回nil
 func NullableToPtr[T any](x T) *T {
 	isZero := reflect.ValueOf(&x).Elem().IsZero()

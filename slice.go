@@ -56,6 +56,12 @@ func Compact[T comparable](collection []T) []T {
 }
 
 // Map manipulates a slice and transforms it to a slice of another type.
+// It applies the iteratee function to each element in the collection and returns a new slice
+// containing the results of each iteratee invocation.
+//
+// The iteratee function receives each item and its index, and should return a value of the new type.
+//
+// 将切片中的每个元素通过iteratee函数转换为新类型
 func Map[T any, R any](collection []T, iteratee func(item T, index int) R) []R {
 	result := make([]R, len(collection))
 	for i, item := range collection {
@@ -64,7 +70,12 @@ func Map[T any, R any](collection []T, iteratee func(item T, index int) R) []R {
 	return result
 }
 
-// Filter iterates over elements of collection, returning an array of all elements predicate returns truthy for.
+// Filter iterates over elements of collection, returning a slice of all elements for which the predicate returns true.
+// The predicate function receives each item and its index, and should return a boolean value.
+//
+// The function creates a new slice and does not modify the original collection.
+//
+// 过滤切片，返回所有满足条件的元素
 func Filter[V any](collection []V, predicate func(item V, index int) bool) []V {
 	result := make([]V, 0, len(collection))
 	for i, item := range collection {
@@ -91,7 +102,13 @@ func FilterMap[T any, R any](collection []T, callback func(item T, index int) (R
 	return result
 }
 
-// FlatMap,和Map的区别是可以对切片的每一项执行一个类型转换
+// FlatMap transforms each element of a slice into a slice of another type and flattens the result.
+// Unlike Map which returns a single value for each element, FlatMap returns a slice of values for each element
+// and then concatenates all resulting slices into a single slice.
+//
+// The iteratee function receives each item and its index, and should return a slice of the new type.
+//
+// FlatMap和Map的区别是可以对切片的每一项执行一个类型转换，并将结果展平为一个切片
 func FlatMap[T any, R any](collection []T, iteratee func(item T, index int) []R) []R {
 	result := make([]R, 0, len(collection))
 

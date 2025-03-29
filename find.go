@@ -97,8 +97,10 @@ func Nth[T any, N c.Integer](collection []T, nth N) (T, error) {
 	return collection[l+n], nil
 }
 
-// Max searches the maximum value of a collection.
-// Returns zero value when collection is empty.
+// MaxOfCollection returns the maximum value in a slice of ordered elements.
+// It compares elements using the '>' operator and returns the largest element found.
+//
+// If the collection is empty, it returns the zero value of type T.
 //
 // 返回一个切片中的最大值
 func MaxOfCollection[T c.Ordered](collection []T) T {
@@ -121,7 +123,10 @@ func MaxOfCollection[T c.Ordered](collection []T) T {
 	return max
 }
 
-// Without returns slice excluding all given values.
+// Without returns a new slice containing all elements from the original collection
+// except those specified in the exclude parameter.
+//
+// The function creates a new slice and does not modify the original collection.
 //
 // 排除exclude中的值
 func Without[T comparable](collection []T, exclude ...T) []T {
@@ -135,7 +140,10 @@ func Without[T comparable](collection []T, exclude ...T) []T {
 	return result
 }
 
-// WithoutEmpty returns slice excluding empty values.
+// WithoutEmpty returns a new slice containing all non-zero elements from the original collection.
+// It filters out any elements that are equal to the zero value of type T.
+//
+// The function creates a new slice and does not modify the original collection.
 //
 // 排除empty值
 func WithoutEmpty[T comparable](collection []T) []T {
@@ -152,6 +160,9 @@ func WithoutEmpty[T comparable](collection []T) []T {
 }
 
 // Sample returns a random item from collection.
+// It uses the provided random number generator to select a random element.
+//
+// If the collection is empty, it returns the zero value of type T and an error.
 //
 // 从列表中随机取一个值
 func Sample[T any](collection []T) T {
@@ -164,6 +175,8 @@ func Sample[T any](collection []T) T {
 }
 
 // Samples returns N random unique items from collection.
+// It uses the provided random number generator to select random elements without replacement.
+// If count is greater than the collection size, it returns all elements in random order.
 //
 // 从列表中随机取n个值
 func Samples[T any](collection []T, count int) []T {
@@ -193,6 +206,11 @@ func Samples[T any](collection []T, count int) []T {
 	return results
 }
 
+// HasDuplicates checks if a slice contains any duplicate elements.
+// It returns true if any element appears more than once in the collection, false otherwise.
+//
+// The function uses a map to track seen elements, making it an O(n) operation.
+//
 // 检查一个列表中是否有重复项
 func HasDuplicates[T comparable](collection []T) bool {
 	length := len(collection)
